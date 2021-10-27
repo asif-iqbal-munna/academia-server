@@ -4,6 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "node npm start",
+    "start-dev": "nodemon npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
