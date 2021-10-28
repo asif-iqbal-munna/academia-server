@@ -1,5 +1,6 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
+const ObjectId = require("mongodb").ObjectId;
 const cors = require("cors");
 require("dotenv").config();
 const app = express();
@@ -25,10 +26,25 @@ const run = async () => {
     const programCollection = database.collection("Programs");
 
     // const result = await courseCollection.insertOne("hi there");
+    //  Posting programs information to the database
     app.post("/programs", async (req, res) => {
       const program = req.body;
       const result = await programCollection.insertOne(program);
       res.send(result);
+    });
+
+    app.get("/programs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await programCollection.findOne(query);
+      console.log(result);
+      res.send(result);
+    });
+
+    // Set programs information to the server
+    app.get("/programs", async (req, res) => {
+      const programs = await programCollection.find({}).toArray();
+      res.send(programs);
     });
   } finally {
     // await client.close();
@@ -38,10 +54,10 @@ const run = async () => {
 run().catch(console.dir);
 
 //  Tested if working in local server
-// app.get("/", (req, res) => {
-//   console.log("server running");
-//   res.send("from the server");
-// });
+app.get("/", (req, res) => {
+  console.log("server running");
+  res.send("from the server");
+});
 
 app.listen(port, () => {
   console.log("Listening to the port", port);
